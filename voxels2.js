@@ -31,14 +31,16 @@ function Player() {
 
 function View(canvas) {
   this.canvas = canvas;
-  this.width = canvas.width = window.innerWidth >> 1 | 0;
-  this.height = canvas.height = window.innerHeight >> 1 | 0;
+  this.width = canvas.width = window.innerWidth | 0;
+  this.height = canvas.height = window.innerHeight | 0;
 
   this.ctx = canvas.getContext('2d');
   this.pixels = this.ctx.getImageData(0, 0, this.width, this.height);
   this.buffer = new ArrayBuffer(this.pixels.data.length);
   this.buf8 = new Uint8ClampedArray(this.buffer);
   this.buf32 = new Uint32Array(this.buffer);
+
+  this.focalLength = 1;
 }
 
 View.prototype.render = function(world, viewpoint) {
@@ -74,7 +76,7 @@ View.prototype.render = function(world, viewpoint) {
   var dist, closest;
   var r, g, b;
 
-  tz = 1; // focal length
+  tz = this.focalLength;
 
   for (y = 0; y < h; y++) {
     ty = (y - h / 2) / h;
@@ -118,11 +120,6 @@ View.prototype.render = function(world, viewpoint) {
         xp = ox + dx * offset;
         yp = oy + dy * offset;
         zp = oz + dz * offset;
-
-        // compensate for flooring negatives
-        if (axis === 0 && tx2 < 0) xp--;
-        else if (axis === 1 && ty2 < 0) yp--;
-        else if (axis === 2 && tz2 < 0) zp--;
 
         dist = scale * offset;
 

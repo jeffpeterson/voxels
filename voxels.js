@@ -119,12 +119,12 @@ function renderMinecraft() {
   f++;
 
   for ( var x = 0; x < w; x++) {
-    var ___xd = (x - w / 2) / h;     // between 0 and 1 (center = 0.5) ... divides by h to keep things square / fix aspect ratio
+    var ___xd = (x - w / 2) / h;     // between -0.5 and 0.5
     for ( var y = 0; y < h; y++) {
 
       //if ((x + y + f) % 2 === 0) continue;
 
-      var __yd = (y - h / 2) / h;  // between 0 and 1 (center = 0.5)
+      var __yd = (y - h / 2) / h;  // between -0.5 and 0.5
       var __zd = 1;                // always 1
 
       var ___zd = __zd * yCos + __yd * ySin;  // ??
@@ -166,7 +166,7 @@ function renderMinecraft() {
 
         var dist = ll * initial;         // somehow calculating distance like this... ?
 
-        var xp = ox + xd * initial;      // xd = x delta (I think) ... initial = initial *offset*
+        var xp = ox + xd * initial;      // x point? xd = x delta (I think) ... initial = initial *offset*
         var yp = oy + yd * initial;
         var zp = oz + zd * initial;
 

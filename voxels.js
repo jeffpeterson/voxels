@@ -1,8 +1,8 @@
 var ctx;
 var pixels;
 
-var w = 160 * 2;
-var h = 80 * 2;
+var w = 80 * 2;
+var h = 40 * 2;
 
 var map = new Uint8Array(64 * 64 * 64);
 var texmap = new Uint32Array(16 * 16 * 3 * 16);

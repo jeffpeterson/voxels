@@ -1,8 +1,8 @@
 var ctx;
 var pixels;
 
-var w = 80 * 2;
-var h = 40 * 2;
+var w = 160 * 2;
+var h = 80 * 2;
 
 var map = new Uint8Array(64 * 64 * 64);
 var texmap = new Uint32Array(16 * 16 * 3 * 16);
@@ -104,7 +104,7 @@ function clock() {
 
 var f = 0;
 function renderMinecraft() {
-  var xRot = Math.sin(Date.now() % 10000 / 10000 * Math.PI * 2) * 0.4
+  var xRot = Math.sin(Date.now() % 10000 / 10000 * Math.PI * 2) * 2.5
       + Math.PI / 2;
   var yRot = Math.cos(Date.now() % 10000 / 10000 * Math.PI * 2) * 0.4;
   var yCos = Math.cos(yRot);
@@ -113,15 +113,17 @@ function renderMinecraft() {
   var xSin = Math.sin(xRot);
 
   var ox = 32.5 + Date.now() % 10000 / 10000 * 64;
-  var oy = 32.5;
+  var oy = 32.5 + yRot * 1;
   var oz = 32.5;
 
   f++;
 
   for ( var x = 0; x < w; x++) {
-    var ___xd = (x - w / 2) / h;     // between 0 and 1 (center = 0.5)
+    var ___xd = (x - w / 2) / h;     // between 0 and 1 (center = 0.5) ... divides by h to keep things square / fix aspect ratio
     for ( var y = 0; y < h; y++) {
+
       //if ((x + y + f) % 2 === 0) continue;
+
       var __yd = (y - h / 2) / h;  // between 0 and 1 (center = 0.5)
       var __zd = 1;                // always 1
 
@@ -131,12 +133,18 @@ function renderMinecraft() {
       var _xd = ___xd * xCos + ___zd * xSin;  // ??
       var _zd = ___zd * xCos - ___xd * xSin;  // ??
 
-      var col = 0;
+      var col = 255 << 16 | 255 << 8 | 255; // start out as white
       var br = 255;
-      var ddist = 0;
+      var ddist = 255;
 
       var closest = 32;                    // start with a max distance (we don't see anything)
-      for ( var d = 0; d < 3; d++) {       // each dimension? (x/y/z?)
+      for ( var d = 0; d < 3; d++) {       // look for intersections with 3 different planes / sides of cubes (x, y, z)
+
+        if (d == 1) continue;
+        // I think dimLength might be the length of the ray in this direction that intersects
+        // between two grid lines on this axis. For instance, at 45 degrees, the dimLength would
+        // be sqrt(2) because it's the sqrt(1^2 + 1^2)
+
         var dimLength = _xd;
         if (d == 1)
           dimLength = _yd;
@@ -148,13 +156,13 @@ function renderMinecraft() {
         var yd = (_yd) * ll;               // when in other dimensions, will scale the *d value for that dimension by the 'main' dim
         var zd = (_zd) * ll;
 
-        var initial = ox - (ox | 0);      // ox - Math.floor(ox)
+        var initial = ox - (ox | 0);      // ox - Math.floor(ox) ... so your float offset
         if (d == 1)
           initial = oy - (oy | 0);
         if (d == 2)
           initial = oz - (oz | 0);     // initial = oDimension - Math.floor(oDimension)
         if (dimLength > 0)
-          initial = 1 - initial;       // if dimension is x, initial = 1 - initial? why?
+          initial = 1 - initial;       // if dimension is not x, initial = 1 - initial? why?
 
         var dist = ll * initial;         // somehow calculating distance like this... ?
 
@@ -199,9 +207,10 @@ function renderMinecraft() {
         }
       }
 
-      var r = ((col >> 16) & 0xff) * br * ddist / (255 * 255);
-      var g = ((col >> 8) & 0xff) * br * ddist / (255 * 255);
-      var b = ((col) & 0xff) * br * ddist / (255 * 255);// + (255 -
+      var mist = 0; //255 * 20 / ddist;
+      var r = ((col >> 16) & 0xff) * br / (255) + mist;
+      var g = ((col >> 8) & 0xff) * br / (255) + mist;
+      var b = ((col) & 0xff) * br / (255) + mist;// + (255 -
 
       pixels.data[(x + y * w) * 4 + 0] = r;
       pixels.data[(x + y * w) * 4 + 1] = g;

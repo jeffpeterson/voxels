@@ -117,10 +117,11 @@ function renderMinecraft() {
   var oz = 32.5;
 
   f++;
+
   for ( var x = 0; x < w; x++) {
     var ___xd = (x - w / 2) / h;     // between 0 and 1 (center = 0.5)
     for ( var y = 0; y < h; y++) {
-      if ((x + y + f) % 2 === 0) continue;
+      //if ((x + y + f) % 2 === 0) continue;
       var __yd = (y - h / 2) / h;  // between 0 and 1 (center = 0.5)
       var __zd = 1;                // always 1
 

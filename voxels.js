@@ -1,8 +1,8 @@
 var ctx;
 var pixels;
 
-var w = window.innerWidth | 0; //160 * 2;
-var h = window.innerHeight | 0; //80 * 2;
+var w = window.innerWidth >> 2 | 0; //160 * 2;
+var h = window.innerHeight >> 2 | 0; //80 * 2;
 
 game.width = w;
 game.height = h;

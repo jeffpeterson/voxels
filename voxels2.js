@@ -8,8 +8,8 @@ function init() {
 
 function clock() {
   view.render(world, player);
-  player.yRotation += Math.PI * 0.001;
-  player.xRotation += Math.PI * 0.0005;
+  player.yRotation = Math.sin(Date.now() % 10000 / 10000 * Math.PI * 2) * 2.5 + Math.PI / 2;
+  player.xRotation = Math.cos(Date.now() % 10000 / 10000 * Math.PI * 2) * 0.4;
   requestAnimationFrame(clock);
 }
 
@@ -31,8 +31,8 @@ function Player() {
 
 function View(canvas) {
   this.canvas = canvas;
-  this.width = canvas.width = window.innerWidth | 0;
-  this.height = canvas.height = window.innerHeight | 0;
+  this.width = canvas.width = window.innerWidth >> 2 | 0;
+  this.height = canvas.height = window.innerHeight >> 2 | 0;
 
   this.ctx = canvas.getContext('2d');
   this.pixels = this.ctx.getImageData(0, 0, this.width, this.height);

@@ -17,7 +17,7 @@ function World() {
   this.grid = new Uint8Array(64 * 64 * 64);
 
   for (var i = 1; i < this.grid.length; i++) {
-    if (Math.random() < 0.01) this.grid[i] = 1;
+    this.grid[i] = Math.random() < 0.01 ? 1 : 0;
   }
 }
 
